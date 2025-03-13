@@ -13,13 +13,9 @@ This project implements the PatchTST (Patch Time Series Transformer) model for t
 ## Project Structure
 ```
 PatchTST_Prediction/
-├── data/                  # Directory for storing input data
-├── models/                # Saved model checkpoints
 ├── results/               # Model implementation and results
 │   ├── model.py           # PatchTST model implementation
 │   └── patchtst.py        # Training and evaluation pipeline
-├── logs/                  # Training logs
-├── evaluation/            # Evaluation results and visualizations
 ├── requirements.txt       # Project dependencies
 └── README.txt             # Project documentation
 ```
@@ -73,10 +69,3 @@ The model is evaluated using:
 - Root Mean Squared Error (RMSE)
 - R² Score
 
-Visualization of predictions vs. actual values is saved as 'vix_prediction.png'.
-
-## License
-[Specify your license here]
-
-## Contact
-[Your contact information] 
