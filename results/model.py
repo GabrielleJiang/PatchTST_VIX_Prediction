@@ -15,21 +15,21 @@ class PatchTST(nn.Module):
     
     Parameters:
     -----------
-    seq_len : int, default=252
+    seq_len: int, default=252
         Length of the input sequence.
-    pred_len : int, default=21
+    pred_len: int, default=21
         Length of the output prediction.
-    patch_len : int, default=21
+    patch_len: int, default=21
         Length of each patch (window).
-    stride : int, default=21
+    stride: int, default=21
         Step size for patch extraction.
-    d_model : int, default=128
+    d_model: int, default=128
         Dimension of the Transformer model.
-    n_heads : int, default=8
+    n_heads: int, default=8
         Number of attention heads in the Transformer encoder.
-    num_layers : int, default=2
+    num_layers: int, default=2
         Number of Transformer encoder layers.
-    dropout : float, default=0.3
+    dropout: float, default=0.3
         Dropout rate for regularization.
     """
 
@@ -46,13 +46,11 @@ class PatchTST(nn.Module):
     ):
         super(PatchTST, self).__init__()
 
-        # Store model parameters
         self.seq_len = seq_len
         self.pred_len = pred_len
         self.patch_len = patch_len
         self.stride = stride
 
-        # Calculate number of patches
         self.num_patches = (seq_len - patch_len) // stride + 1
         logger.info(f"Input length: {seq_len}, Number of patches: {self.num_patches}")
 
@@ -88,7 +86,7 @@ class PatchTST(nn.Module):
 
         Parameters:
         -----------
-        x : torch.Tensor
+        x: torch.Tensor
             Input tensor of shape [batch_size, seq_len].
 
         Returns:
@@ -99,26 +97,21 @@ class PatchTST(nn.Module):
         try:
             batch_size = x.size(0)
 
-            # Ensure the input shape is correct
             if len(x.shape) == 3:
-                x = x.squeeze(1)  # Remove channel dimension if present
+                x = x.squeeze(1)
 
-            # Extract patches from the input sequence
             patches = x.unfold(dimension=1, size=self.patch_len, step=self.stride)
             
-            # Apply patch embedding [batch, num_patches, patch_len] -> [batch, num_patches, d_model]
+            # Apply patch embedding
             embedded = self.patch_embedding(patches)
             
             # Add positional encoding
             embedded = embedded + self.pos_embedding
 
-            # Pass through Transformer encoder
             transformed = self.transformer(embedded)
 
-            # Flatten the output for fully connected layers
             flattened = transformed.reshape(batch_size, -1)
 
-            # Fully connected layers
             x = self.fc1(flattened)
             x = self.layer_norm(x)
             x = self.activation(x)
